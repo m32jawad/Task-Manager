@@ -18,8 +18,7 @@ const auth = async (req, res, next) => {
       return res.status(401).json({ message: 'User not found' });
     }
 
-    // Convert lean object to include _id for compatibility
-    req.user = { ...user, _id: user._id };
+    req.user = user;
     next();
   } catch (error) {
     if (error.name === 'TokenExpiredError') {

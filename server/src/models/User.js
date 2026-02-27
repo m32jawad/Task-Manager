@@ -30,8 +30,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Add index for email lookups (unique index already exists, but explicit is better)
-userSchema.index({ email: 1 });
+// Add index for role lookups
 userSchema.index({ role: 1 });
 
 userSchema.pre('save', async function (next) {
