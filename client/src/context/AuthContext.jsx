@@ -21,7 +21,7 @@ export function AuthProvider({ children }) {
   const fetchUser = async () => {
     try {
       const res = await api.get('/auth/me');
-      setUser(res.data);
+      setUser(res.data.user);
     } catch {
       localStorage.removeItem('token');
       setToken(null);

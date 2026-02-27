@@ -48,7 +48,7 @@ function Tasks() {
           <option value="">All Statuses</option>
           <option value="todo">To Do</option>
           <option value="in-progress">In Progress</option>
-          <option value="review">Review</option>
+          <option value="in-review">In Review</option>
           <option value="done">Done</option>
         </select>
         <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)}>
@@ -56,7 +56,6 @@ function Tasks() {
           <option value="low">Low</option>
           <option value="medium">Medium</option>
           <option value="high">High</option>
-          <option value="urgent">Urgent</option>
         </select>
       </div>
 

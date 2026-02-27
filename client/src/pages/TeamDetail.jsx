@@ -21,11 +21,8 @@ function TeamDetail() {
       const res = await api.get(`/teams/${id}`);
       setTeam(res.data);
       try {
-        const tasksRes = await api.get('/tasks');
-        const teamTasks = tasksRes.data.filter(
-          (t) => t.team?._id === id || t.team === id
-        );
-        setTasks(teamTasks);
+        const tasksRes = await api.get(`/tasks?teamId=${id}`);
+        setTasks(tasksRes.data);
       } catch {
         // tasks may fail
       }
@@ -39,7 +36,7 @@ function TeamDetail() {
   const handleAddMember = async (e) => {
     e.preventDefault();
     try {
-      await api.post(`/teams/${id}/members`, { email });
+      await api.put(`/teams/${id}/members`, { email });
       toast.success('Member added');
       setEmail('');
       fetchTeam();

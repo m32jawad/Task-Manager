@@ -149,7 +149,7 @@ function TaskDetail() {
             <select id="statusUpdate" value={status} onChange={(e) => setStatus(e.target.value)}>
               <option value="todo">To Do</option>
               <option value="in-progress">In Progress</option>
-              <option value="review">Review</option>
+              <option value="in-review">In Review</option>
               <option value="done">Done</option>
             </select>
             <button className="btn btn-primary" onClick={handleStatusUpdate}>Save</button>

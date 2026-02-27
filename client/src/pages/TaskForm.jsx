@@ -182,7 +182,7 @@ function TaskForm() {
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
-              <option value="urgent">Urgent</option>
+
             </select>
           </div>
 
@@ -191,7 +191,7 @@ function TaskForm() {
             <select id="status" value={status} onChange={(e) => setStatus(e.target.value)}>
               <option value="todo">To Do</option>
               <option value="in-progress">In Progress</option>
-              <option value="review">Review</option>
+              <option value="in-review">In Review</option>
               <option value="done">Done</option>
             </select>
           </div>

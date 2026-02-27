@@ -60,28 +60,33 @@ router.post('/', auth, roleCheck('manager'), async (req, res) => {
   }
 });
 
-// GET /api/tasks - Get tasks (query param: teamId)
+// GET /api/tasks - Get tasks (optional query param: teamId)
 router.get('/', auth, async (req, res) => {
   try {
     const { teamId } = req.query;
-    if (!teamId) {
-      return res.status(400).json({ message: 'teamId query parameter is required' });
-    }
+    let query = {};
 
-    const team = await Team.findById(teamId);
-    if (!team) {
-      return res.status(404).json({ message: 'Team not found' });
-    }
+    if (teamId) {
+      const team = await Team.findById(teamId);
+      if (!team) {
+        return res.status(404).json({ message: 'Team not found' });
+      }
+      query.team = teamId;
 
-    let query = { team: teamId };
-
-    // Members only see their assigned tasks
-    if (req.user.role === 'member') {
-      query.assignedTo = req.user._id;
-    } else if (req.user.role === 'manager') {
-      // Manager must be the team's manager
-      if (team.manager.toString() !== req.user._id.toString()) {
-        return res.status(403).json({ message: 'Access denied' });
+      if (req.user.role === 'member') {
+        query.assignedTo = req.user._id;
+      } else if (req.user.role === 'manager') {
+        if (team.manager.toString() !== req.user._id.toString()) {
+          return res.status(403).json({ message: 'Access denied' });
+        }
+      }
+    } else {
+      // No teamId: show tasks across all user's teams
+      if (req.user.role === 'manager') {
+        const teams = await Team.find({ manager: req.user._id });
+        query.team = { $in: teams.map((t) => t._id) };
+      } else {
+        query.assignedTo = req.user._id;
       }
     }
 
