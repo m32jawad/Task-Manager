@@ -45,8 +45,8 @@ teamSchema.index({ manager: 1 });
 teamSchema.index({ members: 1 });
 
 // User Model
-userSchema.index({ email: 1 });
 userSchema.index({ role: 1 });
+// Note: email already has unique index from schema definition
 ```
 
 **Expected Impact**: 90-95% reduction in query time for indexed fields
