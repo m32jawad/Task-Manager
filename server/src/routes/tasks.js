@@ -67,7 +67,7 @@ router.get('/', auth, async (req, res) => {
     let query = {};
 
     if (teamId) {
-      const team = await Team.findById(teamId);
+      const team = await Team.findById(teamId).lean();
       if (!team) {
         return res.status(404).json({ message: 'Team not found' });
       }
@@ -83,7 +83,7 @@ router.get('/', auth, async (req, res) => {
     } else {
       // No teamId: show tasks across all user's teams
       if (req.user.role === 'manager') {
-        const teams = await Team.find({ manager: req.user._id });
+        const teams = await Team.find({ manager: req.user._id }).select('_id').lean();
         query.team = { $in: teams.map((t) => t._id) };
       } else {
         query.assignedTo = req.user._id;
@@ -95,7 +95,8 @@ router.get('/', auth, async (req, res) => {
       .populate('createdBy', 'name email role')
       .populate('team', 'name')
       .populate('bugReportedBy', 'name email role')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
 
     res.json(tasks);
   } catch (error) {

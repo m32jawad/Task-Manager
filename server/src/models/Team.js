@@ -22,4 +22,8 @@ const teamSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Add indexes for frequently queried fields
+teamSchema.index({ manager: 1 });
+teamSchema.index({ members: 1 });
+
 module.exports = mongoose.model('Team', teamSchema);

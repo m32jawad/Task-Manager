@@ -15,18 +15,19 @@ function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const tasksRes = await api.get('/tasks');
-      const taskList = tasksRes.data;
+      // Fetch tasks and teams in parallel for better performance
+      const promises = [api.get('/tasks')];
+      if (user.role === 'manager') {
+        promises.push(api.get('/teams'));
+      }
+
+      const results = await Promise.all(promises);
+      const taskList = results[0].data;
       setTasks(taskList);
 
       let teamCount = 0;
-      if (user.role === 'manager') {
-        try {
-          const teamsRes = await api.get('/teams');
-          teamCount = teamsRes.data.length;
-        } catch {
-          teamCount = 0;
-        }
+      if (user.role === 'manager' && results[1]) {
+        teamCount = results[1].data.length;
       }
 
       setStats({
