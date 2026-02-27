@@ -10,13 +10,16 @@ const auth = async (req, res, next) => {
 
     const token = header.replace('Bearer ', '');
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
+    
+    // Use lean() and select only necessary fields for better performance
+    const user = await User.findById(decoded.id).select('name email role').lean();
 
     if (!user) {
       return res.status(401).json({ message: 'User not found' });
     }
 
-    req.user = user;
+    // Convert lean object to include _id for compatibility
+    req.user = { ...user, _id: user._id };
     next();
   } catch (error) {
     if (error.name === 'TokenExpiredError') {

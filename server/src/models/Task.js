@@ -57,4 +57,11 @@ const taskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Add indexes for frequently queried fields
+taskSchema.index({ team: 1, createdAt: -1 });
+taskSchema.index({ assignedTo: 1, createdAt: -1 });
+taskSchema.index({ createdBy: 1 });
+taskSchema.index({ status: 1 });
+taskSchema.index({ isBugged: 1 });
+
 module.exports = mongoose.model('Task', taskSchema);

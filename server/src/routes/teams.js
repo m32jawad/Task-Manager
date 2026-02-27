@@ -38,11 +38,13 @@ router.get('/', auth, async (req, res) => {
     if (req.user.role === 'manager') {
       teams = await Team.find({ manager: req.user._id })
         .populate('manager', 'name email role')
-        .populate('members', 'name email role');
+        .populate('members', 'name email role')
+        .lean();
     } else {
       teams = await Team.find({ members: req.user._id })
         .populate('manager', 'name email role')
-        .populate('members', 'name email role');
+        .populate('members', 'name email role')
+        .lean();
     }
 
     res.json(teams);

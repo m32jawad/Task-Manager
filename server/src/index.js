@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const compression = require('compression');
 const connectDB = require('./config/db');
 
 dotenv.config();
@@ -9,6 +10,7 @@ const app = express();
 
 // Middleware
 app.use(cors());
+app.use(compression()); // Enable gzip compression
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
