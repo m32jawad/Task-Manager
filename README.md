@@ -112,6 +112,43 @@ The client runs on `http://localhost:5173`.
 ### Upload
 - `POST /api/upload` - Upload image to Cloudinary
 
+## Deployment
+
+### Client (Frontend) Deployment
+
+The client is configured for deployment on Vercel, Netlify, or any static hosting service with proper SPA routing support.
+
+#### Important: SPA Routing Configuration
+The application uses client-side routing with React Router. Configuration files are included to handle page refreshes correctly:
+
+- **`client/vercel.json`** - Configures Vercel to serve index.html for all routes
+- **`client/public/_redirects`** - Configures Netlify and other static hosts
+
+Without these configurations, refreshing the page on routes like `/dashboard` or `/tasks` would result in a 404 error.
+
+#### Vercel Deployment (Recommended)
+1. Create a new project on Vercel
+2. Point it to your repository
+3. Set root directory to `client`
+4. Add environment variable: `VITE_API_URL` (your backend API URL)
+5. Deploy - the `vercel.json` will be automatically detected
+
+#### Netlify Deployment
+1. Create a new site on Netlify
+2. Set build command: `npm run build`
+3. Set publish directory: `dist`
+4. Add environment variable: `VITE_API_URL` (your backend API URL)
+5. Deploy - the `_redirects` file will be automatically copied to dist
+
+#### Other Static Hosts
+For other hosting providers, ensure they support:
+- Serving `index.html` for all routes (SPA fallback)
+- Or configure redirects/rewrites similar to the provided config files
+
+### Server (Backend) Deployment
+
+Deploy the Express backend to Vercel, Heroku, Railway, or any Node.js hosting service. Ensure environment variables are properly configured.
+
 ## Performance Optimizations
 
 This application includes several performance optimizations to ensure fast page loads:
