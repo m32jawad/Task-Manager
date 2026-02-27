@@ -111,6 +111,19 @@ router.get('/:id', auth, async (req, res) => {
       return res.status(404).json({ message: 'Task not found' });
     }
 
+    // Verify user has access to this task
+    const team = await Team.findById(task.team._id || task.team);
+    if (!team) {
+      return res.status(404).json({ message: 'Team not found' });
+    }
+    const isManager = team.manager.toString() === req.user._id.toString();
+    const isMember = team.members.some(
+      (m) => m.toString() === req.user._id.toString()
+    );
+    if (!isManager && !isMember) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
     res.json(task);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -126,6 +139,11 @@ router.put('/:id', auth, async (req, res) => {
     }
 
     if (req.user.role === 'manager') {
+      // Verify this manager owns the team
+      const team = await Team.findById(task.team);
+      if (!team || team.manager.toString() !== req.user._id.toString()) {
+        return res.status(403).json({ message: 'Only the team manager can update tasks' });
+      }
       // Manager can update all fields
       const { title, content, images, status, priority, assignedTo } = req.body;
       if (title !== undefined) task.title = title;
